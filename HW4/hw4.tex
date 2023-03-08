@@ -1,0 +1,93 @@
+\documentclass{article}
+\input{structure.tex} % Include the file specifying the document structure and custom commands
+\setlength\parindent{0pt}
+\usepackage[]{algorithm2e}
+\usepackage{algpseudocode}
+
+\title{EECS 545: Homework \#4} % Title of the assignment
+
+\author{Mingliang Duanmu\\ \texttt{duanmuml@umich.edu}} % Author name and email address
+
+\date{\today} % University, school and/or department name(s) and a date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\section{Neural Network Layer Implementation}
+
+\subsection*{Fully-Connected Layer}
+
+$$\frac{\partial Y_m^{(n)}}{\partial W_{ij}} = \frac{\partial}{\partial W_{ij}} (\sum_l W_{nl}X_{lm} + b_m) = X_{nj}\delta_{ni}\delta_{mj}$$
+$$\frac{\partial Y_m^{(n)}}{\partial b_j} = \frac{\partial}{\partial b_j} (\sum_l W_{nl}X_{lm} + b_m) = \delta_{mj}$$
+$$\frac{\partial Y_m^{(n)}}{\partial X_{ij}} = \frac{\partial}{\partial X_{ij}} (\sum_l W_{nl}X_{lm} + b_m) = W_{nj}\delta_{ni}\delta_{mj}$$
+where $\delta_{ij}$ is Kronecker Delta, $\delta_{ij} = 1$ if $i=j$, else $0$. By vectorizing the result, we get
+$$\frac{\partial L}{\partial W} = \frac{\partial L}{\partial Y}\frac{\partial Y}{\partial W} = \frac{\partial L}{\partial Y} X^T$$
+$$\frac{\partial L}{\partial b} = \frac{\partial L}{\partial Y}\frac{\partial Y}{\partial b} = \sum_i \frac{\partial L}{\partial Y_i}$$
+$$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y}\frac{\partial Y}{\partial X} = W^T \frac{\partial L}{\partial Y}$$
+
+\subsection*{ReLU}
+
+$$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y}\frac{\partial Y}{\partial X} = \frac{\partial L}{\partial Y} \circ \Delta(X)$$
+where $\circ$ is element-wise product and $\Delta(X)_{ij} = I(x_{ij} > 0)$.
+
+\newpage
+
+\section{Multi-class classification with Softmax}
+
+\texttt{hidden\_dim} = 80, \texttt{accuracy} = 0.9695 \\
+\texttt{hidden\_dim} = 100, \texttt{accuracy} = 0.9698 \\
+\texttt{hidden\_dim} = 128, \texttt{accuracy} = 0.9697 \\
+\texttt{hidden\_dim} = 192, \texttt{accuracy} = 0.9678 \\
+\texttt{hidden\_dim} = 200, \texttt{accuracy} = 0.972 \\
+\texttt{hidden\_dim} = 256, \texttt{accuracy} = 0.97
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{softmax_loss.png}
+\end{figure}
+
+\newpage
+
+\section{Convolutional Neural Network for multi-class classification}
+
+\texttt{accuracy} = 0.9803
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{cnn_loss.png}
+\end{figure}
+
+\newpage
+
+\section{Application to Image Captioning}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.5\textwidth]{ic_loss.png}
+\end{figure}
+\begin{figure}[htbp]
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.88\linewidth]{Figure_1.png}  
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=.88\linewidth]{Figure_2.png}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.88\linewidth]{Figure_3.png}  
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=.88\linewidth]{Figure_4.png}
+    \end{subfigure}
+\end{figure}
+
+\newpage
+
+\section{Transfer Learning}
+
+Finetune the pre-trained model: \texttt{accuracy} = 0.954248 \\
+Freeze the parameters in pre-trained model and train the final fc layer: \texttt{accuracy} = 0.960784
+ 
+\end{document}
